@@ -28,9 +28,21 @@ Crater.overlay = function(template, options, callback) {
   if(options.overlayStyle) {
     $div.css(options.overlayStyle);
   }
+  
+  /*var data = options.data;
+
+  if(typeof data === 'function') {
+    data = data();
+  }*/
 
   $div.hide();
-  UI.insert(UI.renderWithData(Template[template], options.data), div);
+  
+  
+  reactiveRenderWithData = function(kind, data, parentComponent) {
+    return UI.render(kind.extend({data: data}), parentComponent);
+  }
+  
+  UI.insert(reactiveRenderWithData(Template[template], options.data), div);
   
   if(!options.modal) {
     $div.click(function(e) {
