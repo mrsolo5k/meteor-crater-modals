@@ -28,15 +28,8 @@ Crater.overlay = function(template, options, callback) {
   if(options.overlayStyle) {
     $div.css(options.overlayStyle);
   }
-  
-  /*var data = options.data;
-
-  if(typeof data === 'function') {
-    data = data();
-  }*/
 
   $div.hide();
-  
   
   reactiveRenderWithData = function(kind, data, parentComponent) {
     return UI.render(kind.extend({data: data}), parentComponent);
@@ -74,21 +67,24 @@ Crater.dismissOverlay = function(element, error, data) {
 
   var overlayDiv = overlay.get()[0];
 
-
+  var _preventClose = undefined;
+  
   /* Callback */
   if(overlayDiv.__craterCallback) {
-    overlayDiv.__craterCallback(error, data);
+     _preventClose = overlayDiv.__craterCallback(error, data);
   }
 
   /* Dismiss */
-  if(overlayDiv.__craterAnimateOut) {
-    overlayDiv.__craterAnimateOut(overlayDiv, function() {
-      overlay.remove();
-    });
-  } else {
-    overlay.fadeOut(300, function(){
-      overlay.remove();
-    });  
+  if(_preventClose !== true) {
+    if(overlayDiv.__craterAnimateOut) {
+      overlayDiv.__craterAnimateOut(overlayDiv, function() {
+        overlay.remove();
+      });
+    } else {
+      overlay.fadeOut(300, function(){
+        overlay.remove();
+      });  
+    }
   }
   
 };
